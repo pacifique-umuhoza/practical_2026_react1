@@ -1,0 +1,108 @@
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+
+function Register() {
+
+    const navigate = useNavigate();
+
+    const [form, setForm] = useState({
+        username: '',
+        password: ''
+    });
+
+    const handleChange = (e) => {
+
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const res = await axios.post(
+                'http://localhost:5000/register',
+                form
+            );
+
+            alert(res.data.message);
+
+            navigate('/login');
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert(
+                error.response?.data?.message ||
+                'Registration failed'
+            );
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+
+            <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-md">
+
+                <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
+                    Register
+                </h1>
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="space-y-5"
+                >
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={form.username}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
+                    />
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={form.password}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
+                    />
+
+                    <button
+                        type="submit"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold duration-300"
+                    >
+                        Register
+                    </button>
+
+                </form>
+
+                <p className="text-center mt-6 text-gray-600">
+
+                    Already have an account?
+
+                    <Link
+                        to="/login"
+                        className="text-green-600 ml-2 hover:underline"
+                    >
+                        Login
+                    </Link>
+
+                </p>
+
+            </div>
+
+        </div>
+    );
+}
+
+export default Register;
